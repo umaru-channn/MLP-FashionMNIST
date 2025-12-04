@@ -24,21 +24,26 @@ void ShowRandomImages(CNNModel& model, CIFAR10Loader& cifar);
 // 32×32×3 RGB画像 → Tensor3D(32×32×3) に変換する
 Tensor3D ImageToTensor(const std::vector<uint8_t>& images)
 {
-// テンソル(高さ 32, 幅 32, チャネル 3)
-Tensor3D tensor(32, 32, 3);
+// CIFAR-10の定数を使用
+constexpr int IMG_WIDTH = CIFAR10Loader::IMAGE_WIDTH;
+constexpr int IMG_HEIGHT = CIFAR10Loader::IMAGE_HEIGHT;
+constexpr int IMG_CHANNELS = CIFAR10Loader::IMAGE_CHANNELS;
+
+// テンソル(高さ, 幅, チャネル)
+Tensor3D tensor(IMG_HEIGHT, IMG_WIDTH, IMG_CHANNELS);
 // 行インデックスを処理する
-for (int row = 0; row < 32; row++)
+for (int row = 0; row < IMG_HEIGHT; row++)
 {
 // 列インデックスを処理する
-for (int column = 0; column < 32; column++)
+for (int column = 0; column < IMG_WIDTH; column++)
 {
 // ピクセルインデックスを計算する
-int pixelIndex = row * 32 + column;
+int pixelIndex = row * IMG_WIDTH + column;
 // 各チャンネル（RGB）について処理する
-for (int c = 0; c < 3; c++)
+for (int c = 0; c < IMG_CHANNELS; c++)
 {
 // 正規化された画素値(0〜255 → 0〜1)を計算する
-float pixelValue = images[pixelIndex * 3 + c] / 255.0f;
+float pixelValue = images[pixelIndex * IMG_CHANNELS + c] / 255.0f;
 // テンソルに画素値を格納する
 tensor(row, column, c) = pixelValue;
 }
@@ -158,7 +163,8 @@ correctFlags[sampleIndex] = (prediction[sampleIndex] == groundTruth[sampleIndex]
 }
 // 左側のグリッドに画像とラベルを表示する（scale=2 → 2倍拡大表示）
 // CIFAR-10は32×32のカラー画像
-UpdateDisplayGridWithLabels(images, groundTruth, prediction, correctFlags, 32, 32, 10, 2);
+UpdateDisplayGridWithLabels(images, groundTruth, prediction, correctFlags, 
+CIFAR10Loader::IMAGE_WIDTH, CIFAR10Loader::IMAGE_HEIGHT, 10, 2);
 // 詳細ビュー用に先頭の画像 (0番目) をテンソルに変換する
 Tensor3D inputTensor = ImageToTensor(images[0]);
 // CNN モデルから Top-10 の予測結果を取得する

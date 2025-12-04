@@ -76,7 +76,7 @@ m_hiddenLayer1 = m_fcl1.Forward(flatVec);
 for (size_t i = 0; i < m_hiddenLayer1.size(); i++)
 {
 // もし値が 0 以下なら ReLU の性質により 0 にする
-if (m_hiddenLayer1[i] < 0.0f){
+if (m_hiddenLayer1[i] < 0.0f) {
 m_hiddenLayer1[i] = 0.0f;
 }
 }

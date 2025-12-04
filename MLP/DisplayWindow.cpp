@@ -111,7 +111,7 @@ int baseX = gridX * (scaledWidth + g_marginX);
 // この画像の描画開始位置 Y（上部 + ラベル分の余白）
 int baseY = gridY * (scaledHeight + g_labelH + g_marginY);
 // 対象画像
-const auto& imges = images[i];
+const auto& imageData = images[i];
 // 画像の全ピクセルを描く
 for (int y = 0; y < g_imageHeight; ++y)
 {
@@ -121,12 +121,12 @@ uint8_t r, g, b;
 if (g_isRGB) {
 // RGB画像の場合: インターリーブ形式 (R,G,B,R,G,B...)
 int pixelIndex = y * g_imageWidth + x;
-r = imges[pixelIndex * 3 + 0];
-g = imges[pixelIndex * 3 + 1];
-b = imges[pixelIndex * 3 + 2];
+r = imageData[pixelIndex * 3 + 0];
+g = imageData[pixelIndex * 3 + 1];
+b = imageData[pixelIndex * 3 + 2];
 } else {
 // グレースケール画像の場合
-uint8_t v = imges[y * g_imageWidth + x];
+uint8_t v = imageData[y * g_imageWidth + x];
 r = g = b = v;
 }
 // スケール倍率で拡大描画する
