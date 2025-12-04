@@ -1,87 +1,87 @@
 #pragma once
 // CNNModel.h
-// Fashion-MNIST —p‚Ì CNN ƒ‚ƒfƒ‹’è‹`
-// \¬FConv ¨ ReLU ¨ Pool ¨ Conv ¨ ReLU ¨ Pool ¨ Flatten ¨ FC1 ¨ ReLU ¨ FC2 ¨ Softmax
+// CIFAR-10 ç”¨ã® CNN ãƒ¢ãƒ‡ãƒ«å®šç¾©
+// æ§‹æˆï¼šConv â†’ ReLU â†’ Pool â†’ Conv â†’ ReLU â†’ Pool â†’ Flatten â†’ FC1 â†’ ReLU â†’ FC2 â†’ Softmax
 
 #include <vector>
 #include <string>
 #include <utility>
 
-#include "Tensor3D.h"								// 3ŸŒ³ƒeƒ“ƒ\ƒ‹iH~W~Cj
-#include "ConvLayer.h"							// ô‚İ‚İ‘wiConvj
-#include "MaxPoolLayer.h"					// Å‘å’lƒv[ƒŠƒ“ƒO‘wiPoolj
-#include "FullyConnectedLayer.h"	// ‘SŒ‹‡‘wiFCj
-#include "ReLULayer.h"							// ReLU Šˆ«‰»‘w
-#include "FlattenLayer.h"						// Flatteni3D ¨ 1D ƒxƒNƒgƒ‹•ÏŠ·j
+#include "Tensor3D.h"               // 3æ¬¡å…ƒãƒ†ãƒ³ã‚½ãƒ«ï¼ˆHÃ—WÃ—Cï¼‰
+#include "ConvLayer.h"              // ç•³ã¿è¾¼ã¿å±¤ï¼ˆConvï¼‰
+#include "MaxPoolLayer.h"           // æœ€å¤§å€¤ãƒ—ãƒ¼ãƒªãƒ³ã‚°å±¤ï¼ˆPoolï¼‰
+#include "FullyConnectedLayer.h"    // å…¨çµåˆå±¤ï¼ˆFCï¼‰
+#include "ReLULayer.h"              // ReLU æ´»æ€§åŒ–å±¤
+#include "FlattenLayer.h"           // Flattenï¼ˆ3D â†’ 1D ãƒ™ã‚¯ãƒˆãƒ«å¤‰æ›ï¼‰
 
-// CNNModel ƒNƒ‰ƒX
-// EForward() : ‰æ‘œ‚ğ“ü—Í‚µŠm—¦•ª•zi10ƒNƒ‰ƒXj‚ğo—Í
-// EBackward(): ‹t“`”d‚µŠe‘w‚Ìƒpƒ‰ƒ[ƒ^XV‚ğÀ{
-// EPredict(): —\‘ªƒNƒ‰ƒX ID æ“¾
-// EGetTop10(): Top-10 ‚Ì—\‘ªŠm—¦æ“¾
+// CNNModel ã‚¯ãƒ©ã‚¹
+// ãƒ»Forward() : ç”»åƒã‚’å…¥åŠ›ã—ç¢ºç‡åˆ†å¸ƒï¼ˆ10ã‚¯ãƒ©ã‚¹ï¼‰ã‚’å‡ºåŠ›
+// ãƒ»Backward(): é€†ä¼æ’­ã—å„å±¤ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿æ›´æ–°ã‚’å®Ÿæ–½
+// ãƒ»Predict(): äºˆæ¸¬ã‚¯ãƒ©ã‚¹ ID å–å¾—
+// ãƒ»GetTop10(): Top-10 ã®äºˆæ¸¬ç¢ºç‡å–å¾—
 class CNNModel
 {
 public:
-	// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	// EConv/Pool/FC ‘w‚Ì‰Šú‰»‚ğs‚¤
-	CNNModel();
+// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+// ãƒ»Conv/Pool/FC å±¤ã®åˆæœŸåŒ–ã‚’è¡Œã†
+CNNModel();
 
-	// ‡“`”d‚·‚é
-	// E“ü—Í Tensor3Di28~28~1j¨ Šm—¦ƒxƒNƒgƒ‹i10ŸŒ³j‚ğ•Ô‚·
-	std::vector<float> Forward(const Tensor3D& x);
+// é †ä¼æ’­ã™ã‚‹
+// ãƒ»å…¥åŠ› Tensor3Dï¼ˆ32Ã—32Ã—3ï¼‰â†’ ç¢ºç‡ãƒ™ã‚¯ãƒˆãƒ«ï¼ˆ10æ¬¡å…ƒï¼‰ã‚’è¿”ã™
+std::vector<float> Forward(const Tensor3D& x);
 
-	// ‹t“`”d‚·‚é
-	// ElearningRate: ŠwK—¦
-	// ESoftmax + CrossEntropy ‚ÌŒù”z‚ğ—¬‚µ‘S‘w‚ğXV‚·‚é
-	void Backward(float learningRate);
+// é€†ä¼æ’­ã™ã‚‹
+// ãƒ»learningRate: å­¦ç¿’ç‡
+// ãƒ»Softmax + CrossEntropy ã®å‹¾é…ã‚’æµã—å…¨å±¤ã‚’æ›´æ–°ã™ã‚‹
+void Backward(float learningRate);
 
-	// ‘¹¸‚ğŒvZ‚·‚é
-	// ECrossEntropyLoss ‚ğ•Ô‚·
-	float ComputeLoss(const std::vector<float>& target);
-	// ŠwK—p‚Ì‹³tƒ‰ƒxƒ‹ione-hotj‚ğƒZƒbƒg
-	void SetTarget(const std::vector<float>& target) { targetVector = target; }
-	// ‰æ‘œ‚ğ“ü—Í‚µ‚ÄÅ‚àŠm—¦‚Ì‚‚¢ƒNƒ‰ƒXID‚ğ•Ô‚·
-	int Predict(const Tensor3D& inputTensor);
-	// ‰æ‘œ‚ğ“ü—Í‚µ‚Ä Softmax ‚ÌŠm—¦ƒxƒNƒgƒ‹‚ğ•Ô‚·
-	std::vector<float> PredictProba(const Tensor3D& inputTensor);
-	// Top-10 ‚Ì (ƒNƒ‰ƒXID, Šm—¦) ‚ğ•Ô‚·
-	std::vector<std::pair<int, float>> GetTop10(const Tensor3D& inputTensor);
-	// Top-10 ‚ğƒNƒ‰ƒX–¼•¶š—ñ‚É•ÏŠ·‚µ‚Ä•Ô‚·
-	std::vector<std::wstring> GetTop10Names(const std::vector<std::pair<int, float>>& top10);
+// æå¤±ã‚’è¨ˆç®—ã™ã‚‹
+// ãƒ»CrossEntropyLoss ã‚’è¿”ã™
+float ComputeLoss(const std::vector<float>& target);
+// å­¦ç¿’ç”¨ã®æ•™å¸«ãƒ©ãƒ™ãƒ«ï¼ˆone-hotï¼‰ã‚’ã‚»ãƒƒãƒˆ
+void SetTarget(const std::vector<float>& target) { targetVector = target; }
+// ç”»åƒã‚’å…¥åŠ›ã—ã¦æœ€ã‚‚ç¢ºç‡ã®é«˜ã„ã‚¯ãƒ©ã‚¹IDã‚’è¿”ã™
+int Predict(const Tensor3D& inputTensor);
+// ç”»åƒã‚’å…¥åŠ›ã—ã¦ Softmax ã®ç¢ºç‡ãƒ™ã‚¯ãƒˆãƒ«ã‚’è¿”ã™
+std::vector<float> PredictProba(const Tensor3D& inputTensor);
+// Top-10 ã® (ã‚¯ãƒ©ã‚¹ID, ç¢ºç‡) ã‚’è¿”ã™
+std::vector<std::pair<int, float>> GetTop10(const Tensor3D& inputTensor);
+// Top-10 ã‚’ã‚¯ãƒ©ã‚¹åæ–‡å­—åˆ—ã«å¤‰æ›ã—ã¦è¿”ã™
+std::vector<std::wstring> GetTop10Names(const std::vector<std::pair<int, float>>& top10);
 
 private:
-	// Forward ‚Åg—p‚·‚éŠe‘w‚Ìo—ÍiBackward ‚Å•K—vj
-	 // “ü—Í‰æ‘œi28~28~1j
-	Tensor3D m_inputImage;  
-	// Conv1 ‚Ìo—Íi28~28~8j
-	Tensor3D m_conv1Output; 
-	// Pool1 ‚Ìo—Íi14~14~8j
-	Tensor3D m_pool1Output;  
-	// Conv2 ‚Ìo—Íi14~14~16j
-	Tensor3D m_conv2Output;  
-	// Pool2 ‚Ìo—Íi7~7~16j
-	Tensor3D m_pool2Output;  
+// Forward ã§ä½¿ç”¨ã™ã‚‹å„å±¤ã®å‡ºåŠ›ï¼ˆBackward ã§å¿…è¦ï¼‰
+// å…¥åŠ›ç”»åƒï¼ˆ32Ã—32Ã—3ï¼‰
+Tensor3D m_inputImage;  
+// Conv1 ã®å‡ºåŠ›ï¼ˆ32Ã—32Ã—8ï¼‰
+Tensor3D m_conv1Output; 
+// Pool1 ã®å‡ºåŠ›ï¼ˆ16Ã—16Ã—8ï¼‰
+Tensor3D m_pool1Output;  
+// Conv2 ã®å‡ºåŠ›ï¼ˆ16Ã—16Ã—16ï¼‰
+Tensor3D m_conv2Output;  
+// Pool2 ã®å‡ºåŠ›ï¼ˆ8Ã—8Ã—16ï¼‰
+Tensor3D m_pool2Output;  
 
-	FlattenLayer m_flatten;  // 7~7~16 ¨ 784ŸŒ³ƒxƒNƒgƒ‹‚É•ÏŠ·‚·‚é‘w
-	std::vector<float> m_hiddenLayer1; // FC1 ‚Ìo—ÍiReLUŒãA128ŸŒ³j
-	std::vector<float> m_outputVector; // Softmax o—Íi10ŸŒ³j
-	std::vector<float> targetVector;   // ‹³tƒf[ƒ^(one-hot 10ŸŒ³)
+FlattenLayer m_flatten;  // 8Ã—8Ã—16 â†’ 1024æ¬¡å…ƒãƒ™ã‚¯ãƒˆãƒ«ã«å¤‰æ›ã™ã‚‹å±¤
+std::vector<float> m_hiddenLayer1; // FC1 ã®å‡ºåŠ›ï¼ˆReLUå¾Œã€128æ¬¡å…ƒï¼‰
+std::vector<float> m_outputVector; // Softmax å‡ºåŠ›ï¼ˆ10æ¬¡å…ƒï¼‰
+std::vector<float> targetVector;   // æ•™å¸«ãƒ‡ãƒ¼ã‚¿(one-hot 10æ¬¡å…ƒ)
 
-	// CNN ‚ğ\¬‚·‚é‘wƒCƒ“ƒXƒ^ƒ“ƒX
-	// ‘æ1ô‚İ‚İ‘wi3~3Ao—Í 8ƒ`ƒƒƒ“ƒlƒ‹j
-	ConvLayer m_conv1;
-	// ‘æ1ƒv[ƒŠƒ“ƒO‘wi2~2j
-	MaxPoolLayer m_pool1;
-	// ‘æ2ô‚İ‚İ‘wi3~3Ao—Í 16ƒ`ƒƒƒ“ƒlƒ‹j
-	ConvLayer m_conv2;       
-	// ‘æ2ƒv[ƒŠƒ“ƒO‘wi2~2j
-	MaxPoolLayer m_pool2;   
-	 // FC1i784 ¨ 128j
-	FullyConnectedLayer m_fcl1;
-	// FC2i128 ¨ 10j
-	FullyConnectedLayer m_fcl2; 
-	 // Conv1 ’¼Œã‚Ì ReLU
-	ReLULayer m_relu1;
-	// Conv2 ’¼Œã‚Ì ReLU
-	ReLULayer m_relu2;      
+// CNN ã‚’æ§‹æˆã™ã‚‹å±¤ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹
+// ç¬¬1ç•³ã¿è¾¼ã¿å±¤ï¼ˆ3Ã—3ã€å‡ºåŠ› 8ãƒãƒ£ãƒ³ãƒãƒ«ã€å…¥åŠ›3ãƒãƒ£ãƒ³ãƒãƒ«ï¼‰
+ConvLayer m_conv1;
+// ç¬¬1ãƒ—ãƒ¼ãƒªãƒ³ã‚°å±¤ï¼ˆ2Ã—2ï¼‰
+MaxPoolLayer m_pool1;
+// ç¬¬2ç•³ã¿è¾¼ã¿å±¤ï¼ˆ3Ã—3ã€å‡ºåŠ› 16ãƒãƒ£ãƒ³ãƒãƒ«ï¼‰
+ConvLayer m_conv2;       
+// ç¬¬2ãƒ—ãƒ¼ãƒªãƒ³ã‚°å±¤ï¼ˆ2Ã—2ï¼‰
+MaxPoolLayer m_pool2;   
+// FC1ï¼ˆ1024 â†’ 128ï¼‰
+FullyConnectedLayer m_fcl1;
+// FC2ï¼ˆ128 â†’ 10ï¼‰
+FullyConnectedLayer m_fcl2; 
+// Conv1 ç›´å¾Œã® ReLU
+ReLULayer m_relu1;
+// Conv2 ç›´å¾Œã® ReLU
+ReLULayer m_relu2;      
 };
